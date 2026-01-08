@@ -1,5 +1,10 @@
 const prices = document.querySelector(".tz__prices");
-let num = 0;
+const sumPrice = document.querySelector(".tz__balans");
+let before1 = 0;
+let before2 = 0;
+let before3 = 0;
+let before4 = 0;
+let sum = 0;
 
 setInterval(() => {
   fetch(
@@ -8,33 +13,6 @@ setInterval(() => {
     .then((res) => res.json())
     .then((data) => {
       console.log(data);
-
-      if (num > 0) {
-        if (before1 >= data.binancecoin.usd) {
-          before1.style.cssText = "color: green;";
-          console.log(before1);
-        } else {
-          before1.style.cssText = "color: red;";
-        }
-        if (before2 >= data.bitcoin.usd) {
-          before2.style.cssText = "color: green;";
-          console.log(before2);
-        } else {
-          before2.style.cssText = "color: red;";
-        }
-        if (before3 >= data.ethereum.usd) {
-          before3.style.cssText = "color: green;";
-          console.log(before3);
-        } else {
-          before3.style.cssText = "color: red;";
-        }
-        if (before4 >= data.tether.usd) {
-          before4.style.cssText = "color: green;";
-          console.log(before4);
-        } else {
-          before4.style.cssText = "color: red;";
-        }
-      }
 
       prices.innerHTML = `
               <p class="tz__price">
@@ -53,13 +31,50 @@ setInterval(() => {
                 )}</span>
               </p>
               <p class="tz__price">TETHER<span class="tz__span4">$${Number(
-                data.tether.usd
+                data.tether.usd.toFixed(2)
               )}</span></p>
     `;
+
+      if (data.binancecoin.usd >= before1) {
+        console.log("more");
+        document.querySelector(".tz__span1").style.cssText = "color: #0ecb81;";
+      } else {
+        console.log("less");
+        document.querySelector(".tz__span1").style.cssText = "color: red;";
+      }
+      if (data.bitcoin.usd >= before1) {
+        console.log("more");
+        document.querySelector(".tz__span2").style.cssText = "color: #0ecb81;";
+      } else {
+        console.log("less");
+        document.querySelector(".tz__span2").style.cssText = "color: red;";
+      }
+      if (data.ethereum.usd >= before1) {
+        console.log("more");
+        document.querySelector(".tz__span3").style.cssText = "color: #0ecb81;";
+      } else {
+        console.log("less");
+        document.querySelector(".tz__span3").style.cssText = "color: red;";
+      }
+      if (data.tether.usd >= before1) {
+        console.log("more");
+        document.querySelector(".tz__span4").style.cssText = "color: #0ecb81;";
+      } else {
+        console.log("less");
+        document.querySelector(".tz__span4").style.cssText = "color: red;";
+      }
+
+      before1 = data.binancecoin.usd;
+      before2 = data.bitcoin.usd;
+      before3 = data.ethereum.usd;
+      before4 = data.tether.usd;
+
+      sum +=
+        data.binancecoin.usd +
+        data.bitcoin.usd +
+        data.ethereum.usd +
+        data.tether.usd;
+
+      sumPrice.innerHTML = `$${sum.toFixed(2)}`;
     });
-  const before1 = (document.querySelector(".tz__span1").value = 0);
-  const before2 = (document.querySelector(".tz__span2").value = 0);
-  const before3 = (document.querySelector(".tz__span3").value = 0);
-  const before4 = (document.querySelector(".tz__span4").value = 0);
 }, 10000);
-num++;
